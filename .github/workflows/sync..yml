@@ -17,3 +17,4 @@ jobs:
       - name: Push to Codeberg
         run: |
           git push --prune --force "https://gowildchild:${{ secrets.CODEBERG_TOKEN }}@codeberg.org/gowildchild/Argorithm.git" refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
+
