@@ -1,5 +1,5 @@
 # ==========================================================================
-# ARGORITHM superbifluedtokenmanipulator // Radius & OIDC to SAMBA mounts
+# ARGORITHM argorithmConnectVault.py          Radius & OIDC to SAMBA mounts
 # Copyright (c) 2017 by Gunther Voet. All Rights Reserved. 
 # Released under strict Non-Commercial Open-Source License terms.
 # Commercial use requires immediate written license and explicit payment.
