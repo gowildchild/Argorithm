@@ -5,69 +5,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Argorithm | Polyamoric Token Lab</title>
     <style>
-        body { font-family: 'Courier New', monospace; background-color: #0d1117; color: #00ff66; padding: 20px; line-height: 1.4; }
-        h1, h2 { color: #00ffff; border-bottom: 1px solid #00ff66; padding-bottom: 5px; }
-        .panel { background: #161b22; border: 1px solid #30363d; padding: 15px; margin-bottom: 15px; border-radius: 6px; }
-        label { font-weight: bold; color: #ff79c6; display: block; margin-top: 10px; }
-        input, select, button { background: #21262d; border: 1px solid #30363d; color: #fff; padding: 8px; font-family: inherit; font-size: 14px; border-radius: 4px; margin-top: 5px; }
-        input[type="text"] { width: 95%; box-sizing: border-box; }
-        button { background: #238636; color: white; cursor: pointer; font-weight: bold; border: none; }
+        :root {
+            --bg-color: #0d1117;
+            --panel-bg: #161b22;
+            --border-color: #30363d;
+            --text-color: #c9d1d9;
+            --cyan: #58a6ff;
+            --green: #3fb950;
+            --magenta: #d2a8ff;
+            --red: #f85149;
+            --yellow: #d4bbff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 10px;
+            font-size: 14px;
+        }
+        h1, h2 {
+            font-family: 'Courier New', monospace;
+            color: var(--cyan);
+            margin: 5px 0;
+        }
+        h1 { font-size: 1.5rem; text-align: center; }
+        h2 { font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 3px; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        @media(min-width: 768px) {
+            .grid { grid-template-columns: 1fr 1fr; }
+        }
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 6px;
+        }
+        .full-width { grid-column: 1 / -1; }
+        label { font-weight: bold; color: var(--magenta); display: block; margin-top: 5px; font-size: 0.85rem; }
+        input, select, button {
+            background: #21262d;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 6px 10px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            margin-top: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button { background: #238636; border: none; font-weight: bold; cursor: pointer; margin-bottom: 5px;}
         button:hover { background: #2ea44f; }
-        .alert-active { color: #ff5555; font-weight: bold; animation: blink 1s infinite; }
-        .json-view { color: #8be9fd; white-space: pre-wrap; font-size: 12px; max-height: 150px; overflow-y: auto; background: #000; padding: 10px; border-radius: 4px; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .btn-attack { background: #ab793c; }
+        .btn-attack:hover { background: #bd93f9; }
+        .btn-reset { background: #8b2500; }
+        .btn-reset:hover { background: #b22222; }
+        .status-banner {
+            font-weight: bold;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        .status-pure { background: rgba(63, 185, 80, 0.15); color: var(--green); border: 1px solid var(--green); }
+        .status-alert { background: rgba(248, 81, 73, 0.15); color: var(--red); border: 1px solid var(--red); animation: blink 1.5s infinite; }
+        .register-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 8px;
+            margin-top: 5px;
+            font-family: 'Courier New', monospace;
+        }
+        .register-card {
+            background: #0d1117;
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        .register-card span { display: block; font-size: 0.75rem; color: #8b949e; }
+        .register-card b { font-size: 0.95rem; color: #fff; }
+        .json-view {
+            background: #000;
+            color: #8be9fd;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 120px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+        @keyframes blink { 50% { border-color: transparent; } }
     </style>
 </head>
 <body>
 
     <h1>🛰️ ARGORITHM & TACO POLYAMORIC WORKSPACE</h1>
-    <p>Client-side cryptographic execution reef engine mapping out out-of-band AS validation path structures.</p>
 
-    <!-- SECTION 1: GLOBAL ENGINE CONFIGURATION -->
-    <div class="panel">
-        <h2>Global Environment Settings</h2>
-        <label>Passphrase Encryption Key (SesamID Cipher Mask)</label>
-        <input type="text" id="passphrase" value="iamgunther" placeholder="Leave empty for plaintext baseline operations...">
-        
-        <label>Target Bit Architecture Selection</label>
-        <select id="bit_width" onchange="resetEngine()">
-            <option value="128" selected>128-Bit Core Token Frame (32 Characters)</option>
-            <option value="256">256-Bit Expanded BGP Trajectory Frame (64 Characters)</option>
-        </select>
-        <button style="margin-top:15px;" onclick="resetEngine()">Issue Link Reset / Synchronize Base</button>
-    </div>
+    <div class="grid">
+        <!-- SETTINGS PANEL -->
+        <div class="panel">
+            <h2>🔧 Global settings</h2>
+            <label>Passphrase Encryption Key (SesamID Cipher Mask)</label>
+            <input type="text" id="passphrase" value="SesamID2012">
+            
+            <label>Target Bit Architecture Selection</label>
+            <select id="bit_width" onchange="resetEngine()">
+                <option value="128" selected>128-Bit Core Token Frame (32 Chars)</option>
+                <option value="256">256-Bit Expanded Trajectory Frame (64 Chars)</option>
+            </select>
+            <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <button class="btn-reset" onclick="resetEngine()">🔄 Link Reset</button>
+                <button style="background: #1f6feb;" onclick="refreshClock()">🕒 Sync Clock</button>
+            </div>
+        </div>
 
-    <!-- SECTION 2: THE POLYMORPHIC SHUTTLE -->
-    <div class="panel">
-        <h2>▲ Outbound Channel (Sender Payload Vector String)</h2>
-        <label>Active Hexadecimal Wire Token Payload String</label>
-        <input type="text" id="tx_token" readonly style="color: #ffb86c; font-weight: bold;">
-        <div style="margin-top: 15px;">
-            <button onclick="stepHandshake(false)">Forward Handshake Touch (Step Counters)</button>
-            <button style="background:#bd93f9;" onclick="stepHandshake(true)">🚨 Inject Malicious Invariant Fuzz Attack</button>
+        <!-- SHUTTLE TRANSMISSION PANEL -->
+        <div class="panel">
+            <h2>▲ Outbound Channel (Transmission Pipeline)</h2>
+            <label>Active Hexadecimal Wire Token Payload String</label>
+            <input type="text" id="tx_token" readonly style="color: #ffb86c; font-weight: bold; font-family: 'Courier New', monospace;">
+            <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <button onclick="stepHandshake(false)">🔼 Touch Handshake</button>
+                <button class="btn-attack" onclick="stepHandshake(true)">🚨 Inject Counter Fuzz</button>
+            </div>
+        </div>
+
+        <!-- MIRROR OVERVIEW PANEL -->
+        <div class="panel full-width">
+            <h2>▼ Inbound Mirror Register Analysis (Receiver Pane)</h2>
+            <div id="status_indicator" class="status-banner status-pure">💚 HANDSHAKE STATUS: PERFECTLY ALIGNED ASYMMETRIC RELATIONSHIP.</div>
+            
+            <div class="register-grid" id="register_fields"></div>
+            
+            <label style="margin-top:12px;">🔍 Active Tripline Canary Alert Flags</label>
+            <div id="canary_warnings" style="color: var(--green); font-weight: bold; font-family: 'Courier New', monospace; font-size: 0.85rem; margin-top: 2px;">NONE (SYSTEM PURE)</div>
+        </div>
+
+        <!-- TELEMETRY VAULT -->
+        <div class="panel full-width">
+            <h2>🗂️ Compact Runtime JSON Vault Emission Tracker</h2>
+            <div id="json_tracker" class="json-view">{}</div>
         </div>
     </div>
 
-    <!-- SECTION 3: THE ANALYSIS REGISTER MATRIX -->
-    <div class="panel">
-        <h2>▼ Inbound Mirror Register View (Receiver Data Fields)</h2>
-        <div id="status_indicator" style="font-weight: bold; margin-bottom: 15px;">Handshake Status: Checking Reefs...</div>
-        
-        <div id="register_fields"></div>
-        
-        <label>🔍 Active Tripline Canary Alert Flags</label>
-        <div id="canary_warnings" style="color: #50fa7b; font-weight: bold; padding: 5px; border-radius: 4px;">NONE (SYSTEM PURE)</div>
-    </div>
-
-    <!-- SECTION 4: REAL-TIME COMPACT VAULT OUTPUT -->
-    <div class="panel">
-        <h2>🗂️ Compact Runtime JSON Vault Emission Tracker</h2>
-        <div id="json_tracker" class="json-view">{}</div>
-    </div>
-
     <script>
-        // --- Core Application State Definitions ---
-        let current_state = { lid: 1, c_up: 0, c_down: 255, time: 0, data: 0x1337, salt: 0x1234, meta: 0x2772FF, up_as: 0x1337, dn_as: 0x2710 };
+        let current_state = { lid: 1, c_up: 0, c_down: 255, time: 0, data: 0x1337, salt: 0x1234, meta: 0x2772FF, up_as: 0x1337, dn_as: 0x2710, violation_start: 0, lease_left: 0 };
 
         function calculateModulo256(hexString) {
             let sum = 0;
@@ -124,6 +215,8 @@
             current_state.lid = 1;
             current_state.meta = 0x2772FF;
             current_state.salt = 0x1234;
+            current_state.violation_start = 0;
+            current_state.lease_left = 0;
 
             let packedBits = pack(current_state, width);
             let payloadBits = packedBits >> 8n;
@@ -142,18 +235,22 @@
             updateReceiverPanel(tokenStr, current_state, false);
         }
 
-        // Paste this updated stepHandshake block inside your index.html file script tag
+        function refreshClock() {
+            const width = parseInt(document.getElementById('bit_width').value);
+            const current_minute = Math.floor(Date.now() / 60000);
+            current_state.time = current_minute & (width === 256 ? 0xFFFF : 0xFF);
+            stepHandshake(false);
+        }
+
         async function stepHandshake(forceMalicious) {
             const width = parseInt(document.getElementById('bit_width').value);
             const pass = document.getElementById('passphrase').value;
             const current_minute = Math.floor(Date.now() / 60000);
             const ceiling = width === 256 ? 65535 : 255;
 
-            // Check if 24-hour lease is already active
             if (current_state.meta & 0x040000) {
-                let minutes_elapsed = current_minute - current_state.violation_start;
-                if (minutes_elapsed >= 1440) {
-                    // Self-heal execution ring
+                let elapsed = current_minute - current_state.violation_start;
+                if (elapsed >= 1440) {
                     current_state.lid = 1;
                     current_state.meta &= ~0x010000;
                     current_state.meta &= ~0x040000;
@@ -161,7 +258,7 @@
                     current_state.c_down = ceiling;
                     current_state.lease_left = 0;
                 } else {
-                    current_state.lease_left = 1440 - minutes_elapsed;
+                    current_state.lease_left = 1440 - elapsed;
                 }
             }
 
@@ -177,19 +274,22 @@
             let isSnareTripped = (current_state.meta & 0x040000) ? true : false;
             
             if (((test_up + test_down) & ceiling) !== ceiling && !isSnareTripped) {
-                current_state.lid = 14; // State 0x0E
+                current_state.lid = 14; 
                 current_state.c_up = 0;
                 current_state.c_down = ceiling;
-                current_state.meta |= 0x010000;
-                current_state.meta |= 0x040000;
-                current_state.violation_start = current_minute; // Lock timestamp index
+                current_state.meta |= 0x010000; 
+                current_state.meta |= 0x040000; 
+                current_state.violation_start = current_minute;
                 current_state.lease_left = 1440;
                 isSnareTripped = true;
             } else if (!isSnareTripped) {
                 current_state.c_up = test_up;
                 current_state.c_down = test_down;
                 current_state.time = current_minute & ceiling;
-                
+                current_state.lid = current_state.lid === 14 ? 1 : current_state.lid;
+                current_state.meta &= ~0x010000;
+                current_state.meta &= ~0x040000;
+
                 if (width === 256) {
                     current_state.salt = (current_state.salt ^ current_state.up_as ^ current_state.dn_as ^ current_minute) & 0xFFFFFFFF;
                 } else {
@@ -209,34 +309,37 @@
             let hexPayload = payloadBits.toString(16).toUpperCase().padStart(expected_len - 2, '0');
             let ecc = calculateModulo256(hexPayload);
             let nextToken = `OK:${hexPayload}${ecc}`;
-            if (state.meta & 0x040000) {
-              fieldsHtml += `<p style="color:#ff5555;"><b>⏳ LEASE TIME REMAINING:</b> ${state.lease_left} Minutes (Fenced Loop)</p>`;
-            }
 
             document.getElementById('tx_token').value = nextToken;
             updateReceiverPanel(nextToken, current_state, isSnareTripped);
         }
 
-
         function updateReceiverPanel(tokenStr, state, isSnareTripped) {
             const width = parseInt(document.getElementById('bit_width').value);
+            const ceiling = width === 256 ? 65535 : 255;
             let fieldsHtml = `
-                <p><b>[LID] Instruction State  :</b> 0x${state.lid.toString(16).toUpperCase()}</p>
-                <p><b>[UP]  Incremental Counter:</b> ${state.c_up} / ${width === 256 ? 65535 : 255}</p>
-                <p><b>[DN]  Decremental Counter:</b> ${state.c_down} / ${width === 256 ? 65535 : 255}</p>
+                <div class="register-card"><span>[LID] Instruction</span><b>0x${state.lid.toString(16).toUpperCase()}</b></div>
+                <div class="register-card"><span>[UP] Counter</span><b>${state.c_up} / ${ceiling}</b></div>
+                <div class="register-card"><span>[DN] Counter</span><b>${state.c_down} / ${ceiling}</b></div>
+                <div class="register-card"><span>[TIME] Epoch</span><b>${state.time}</b></div>
             `;
             if (width === 256) {
                 fieldsHtml += `
-                    <p><b>[AS_UP] Uplink ASN Carrier   :</b> 0x${state.up_as.toString(16).toUpperCase()}</p>
-                    <p><b>[AS_DN] Downlink ASN Carrier :</b> 0x${state.dn_as.toString(16).toUpperCase()}</p>
+                    <div class="register-card"><span>[AS_UP] Uplink AS</span><b>0x${state.up_as.toString(16).toUpperCase()}</b></div>
+                    <div class="register-card"><span>[AS_DN] Downlink AS</span><b>0x${state.dn_as.toString(16).toUpperCase()}</b></div>
                 `;
             } else {
-                fieldsHtml += `<p><b>[DATA] 32-Bit Core Payload :</b> 0x${state.data.toString(16).toUpperCase()}</p>`;
+                fieldsHtml += `<div class="register-card"><span>[DATA] Payload</span><b>0x${state.data.toString(16).toUpperCase()}</b></div>`;
             }
             fieldsHtml += `
-                <p><b>[SLT] Provisioned Next Salt :</b> 0x${state.salt.toString(16).toUpperCase()}</p>
-                <p><b>[MT]  Meta Code Registry    :</b> 0x${state.meta.toString(16).toUpperCase()}</p>
+                <div class="register-card"><span>[SLT] Output Salt</span><b>0x${state.salt.toString(16).toUpperCase()}</b></div>
+                <div class="register-card"><span>[MT] Meta Registry</span><b>0x${state.meta.toString(16).toUpperCase()}</b></div>
             `;
+            
+            if (state.meta & 0x040000) {
+                fieldsHtml += `<div class="register-card" style="border-color:var(--red);"><span style="color:var(--red);">⏳ LEASE REMAINING</span><b>${state.lease_left} Mins</b></div>`;
+            }
+            
             document.getElementById('register_fields').innerHTML = fieldsHtml;
 
             let warningBox = document.getElementById('canary_warnings');
@@ -244,17 +347,17 @@
 
             if (isSnareTripped) {
                 warningBox.innerHTML = "COUNTER_INVARIANT_VIOLATION | 24H_UPLINK_DOWNLINK_WARNING_ACTIVE";
-                warningBox.className = "alert-active";
-                statusBox.innerHTML = "⚠️ BGP FENCE ENGAGED: TRANSMITTING INTER-AS DRIFT NOTICES TO TRANSIT PATHS.";
-                statusBox.style.color = "#ff5555";
+                warningBox.style.color = "var(--red)";
+                statusBox.innerHTML = "⚠️ BGP FENCE ACTIVE: BROADCASTING INVARIANT DISCREPANCY STATUS.";
+                statusBox.className = "status-banner status-alert";
             } else {
                 warningBox.innerHTML = "NONE (SYSTEM PURE)";
-                warningBox.className = "";
+                warningBox.style.color = "var(--green)";
                 statusBox.innerHTML = "💚 HANDSHAKE STATUS: PERFECTLY ALIGNED ASYMMETRIC RELATIONSHIP.";
-                statusBox.style.color = "#50fa7b";
+                statusBox.className = "status-banner status-pure";
             }
 
-            document.getElementById('json_tracker').innerText = JSON.stringify({ TOKEN: tokenStr, CORE_REGISTERS: state }, null, 2);
+            document.getElementById('json_tracker').innerText = JSON.stringify({ TOKEN: tokenStr, REGISTERS: state }, null, 2);
         }
 
         window.onload = resetEngine;
