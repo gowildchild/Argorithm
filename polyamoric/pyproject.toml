@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "argorithm-poly-engine"
+version = "0.2.0"
+authors = [
+    { name = "Gunther Voet" }
+]
+description = "An elegant, stateless, low-overhead polyamoric context-attestation protocol for out-of-band BGP path validation."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Security :: Cryptography",
+    "Topic :: System :: Networking :: Monitoring"
+]
+dependencies = [
+    "rich>=13.0.0"
+]
+
+[project.urls]
+"Homepage" = "https://ietf.org"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["poly_engine*"]
