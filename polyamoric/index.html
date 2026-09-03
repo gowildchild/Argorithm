@@ -108,14 +108,14 @@
 </head>
 <body>
 
-    <h1>🛰️ ARGORITHM & TACO POLYAMORIC WORKSPACE</h1>
+    <h1></h1> ARGORITHM | TACO POLYAMORIC STATELESS PROTOCOL</h1>
 
     <div class="grid">
         <!-- SETTINGS PANEL -->
         <div class="panel">
-            <h2>🔧 Global settings</h2>
-            <label>Passphrase Encryption Key (SesamID Cipher Mask)</label>
-            <input type="text" id="passphrase" value="SesamID2012">
+            <h2>Global settings</h2>
+            <label>Passphrase Encryption Key</label>
+            <input type="text" id="passphrase" value="HIiAMgunther">
             
             <label>Target Bit Architecture Selection</label>
             <select id="bit_width" onchange="resetEngine()">
@@ -243,6 +243,90 @@
         }
 
         async function stepHandshake(forceMalicious) {
+            const width = parseInt(document.getElementById('bit_width').value);
+            const pass = document.getElementById('passphrase').value;
+            const current_minute = Math.floor(Date.now() / 60000);
+            const ceiling = width === 256 ? 65535 : 255;
+
+            if (current_state.meta & 0x040000) {
+                let elapsed = current_minute - current_state.violation_start;
+                if (elapsed >= 1440) {
+                    current_state.lid = 1;
+                    current_state.meta &= ~0x010000;
+                    current_state.meta &= ~0x040000;
+                    current_state.c_up = 0;
+                    current_state.c_down = ceiling;
+                    current_state.lease_left = 0;
+                } else {
+                    current_state.lease_left = 1440 - elapsed;
+                }
+            }
+
+            let test_up, test_down;
+            if (forceMalicious) {
+                test_up = (current_state.c_up + 10) & ceiling;
+                test_down = current_state.c_down;
+            } else {
+                test_up = (current_state.c_up + 1) & ceiling;
+                test_down = (current_state.c_down - 1) & ceiling;
+            }
+
+            let isSnareTripped = (current_state.meta & 0x040000) ? true : false;
+            
+            if (((test_up + test_down) & ceiling) !== ceiling && !isSnareTripped) {
+                current_state.lid = 14; 
+                current_state.c_up = 0;
+                current_state.c_down = ceiling;
+                current_state.meta |= 0x010000; 
+                current_state.meta |= 0x040000; 
+                current_state.violation_start = current_minute;
+                current_state.lease_left = 1440;
+                isSnareTripped = true;
+            } else if (!isSnareTripped) {
+                current_state.c_up = test_up;
+                current_state.c_down = test_down;
+                current_state.time = current_minute & ceiling;
+                current_state.lid = current_state.lid === 14 ? 1 : current_state.lid;
+                current_state.meta &= ~0x010000;
+                current_state.meta &= ~0x040000;
+
+                // FIX: Perform the handover calculation and update the global state variables
+                let base_salt = Number(current_state.salt);
+                let time_factor = Number(current_minute);
+                let computed_next_salt = 0;
+                
+                if (width === 256) {
+                    let up_as = Number(current_state.up_as);
+                    let dn_as = Number(current_state.dn_as);
+                    computed_next_salt = (base_salt ^ up_as ^ dn_as ^ time_factor) & 0xFFFFFFFF;
+                } else {
+                    let data_slot = Number(current_state.data);
+                    computed_next_salt = (base_salt ^ data_slot ^ time_factor) & 0xFFFFFFFF;
+                }
+                
+                // COMMIT THE HANDOVER: Overwrite the active state register with the new salt
+                current_state.salt = computed_next_salt;
+            }
+
+            let packedBits = pack(current_state, width);
+            let payloadBits = packedBits >> 8n;
+            const expected_len = width === 256 ? 64 : 32;
+
+            if (pass) {
+                let mask = await getStreamCipherMask(pass, current_minute, width);
+                payloadBits ^= mask;
+            }
+
+            let hexPayload = payloadBits.toString(16).toUpperCase().padStart(expected_len - 2, '0');
+            let ecc = calculateModulo256(hexPayload);
+            let nextToken = `OK:${hexPayload}${ecc}`;
+
+            document.getElementById('tx_token').value = nextToken;
+            updateReceiverPanel(nextToken, current_state, isSnareTripped);
+        }
+
+        
+        async function stepHandshakeOld(forceMalicious) {
             const width = parseInt(document.getElementById('bit_width').value);
             const pass = document.getElementById('passphrase').value;
             const current_minute = Math.floor(Date.now() / 60000);
