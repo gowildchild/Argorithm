@@ -33,7 +33,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 10px;
+            padding: 6px;
             font-size: 14px;
         }
         h1, h2 {
@@ -54,7 +54,7 @@
         .panel {
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
-            padding: 12px;
+            padding: 6px;
             border-radius: 6px;
         }
         .full-width { grid-column: 1 / -1; }
@@ -156,12 +156,12 @@
 
         <!-- SHUTTLE TRANSMISSION PANEL -->
         <div class="panel">
-            <h2>▲ Outbound Channel (Transmission Pipeline)</h2>
-            <label>Active Hexadecimal Wire Token Payload String</label>
+            <h2>Outbound Channel (Transmission Pipeline)</h2>
+            <label>Active Hexadecimal Wire Token Payload</label>
             <input type="text" id="tx_token" readonly style="color: #ffb86c; font-weight: bold; font-family: 'Courier New', monospace;">
             <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <button onclick="stepHandshake(false)">🔼 Touch Handshake</button>
-                <button class="btn-attack" onclick="stepHandshake(true)">🚨 Inject Counter Fuzz</button>
+                <button class="btn-attack" onclick="stepHandshake(true)">Inject Counter Fuzz</button>
             </div>
         </div>
 
